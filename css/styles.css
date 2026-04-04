@@ -1,0 +1,1207 @@
+/* ========== VARIABLES TROPICAL INTENSO ========== */
+:root {
+    --terracotta: #e07a5f;
+    --papaya: #682832;
+    --mango-maduro: #f2cc8f;
+    --emerald-green: #3d6b4f;
+    --jungle: #2a4635;
+    --dark-bg: #12281f;
+    --card-bg: #23442f;
+    --text-light: #fff7ed;
+    --text-warm: #d4c5b0;
+    --glow-terracotta: rgba(224, 122, 95, 0.35);
+    --glow-papaya: rgba(244, 172, 183, 0.25);
+    --shadow-intense: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --border-radius-card: 20px;
+    --transition: all 0.25s ease;
+}
+
+/* ========== VARIABLES FUTURISTAS ========== */
+:root {
+    --glow-primary: rgba(224, 122, 95, 0.6);
+    --glow-secondary: rgba(244, 172, 183, 0.4);
+    --glass-bg: rgba(29, 62, 47, 0.4);
+    --glass-border: rgba(224, 122, 95, 0.25);
+    --transition-smooth: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: url('../assets/images/fondo-completo.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: var(--text-light);
+    line-height: 1.5;
+}
+
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* ========== HEADER ========== */
+.main-header {
+    position: relative;
+    padding: 60px 0 50px;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(13, 40, 24, 0.88) 0%, rgba(30, 58, 42, 0.85) 100%), url('../assets/images/Fondo.png');
+    background-size: cover;
+    background-position: center 30%;
+    background-repeat: no-repeat;
+    border-bottom: 3px solid var(--terracotta);
+    overflow: hidden;
+}
+
+.main-header::before {
+    content: "🌴🥭🔥";
+    position: absolute;
+    bottom: -15px;
+    left: -20px;
+    font-size: 90px;
+    opacity: 0.12;
+    pointer-events: none;
+}
+
+.main-header::after {
+    content: "🍃🌶️✨";
+    position: absolute;
+    top: -20px;
+    right: -15px;
+    font-size: 80px;
+    opacity: 0.12;
+    pointer-events: none;
+}
+
+.main-header .container {
+    position: relative;
+    z-index: 2;
+}
+
+.header-badge {
+    background: linear-gradient(135deg, var(--terracotta), var(--papaya));
+    display: inline-block;
+    padding: 4px 18px;
+    border-radius: 40px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px var(--glow-terracotta);
+}
+
+.badge-text {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--dark-bg);
+}
+
+.site-title {
+    font-size: 4.2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--mango-maduro), var(--papaya), var(--terracotta));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.title-underline {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.leaf-icon {
+    font-size: 1.4rem;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    animation: float 3s ease-in-out infinite;
+}
+
+.leaf-icon:nth-child(1) { animation-delay: 0s; color: var(--emerald-green); }
+.leaf-icon:nth-child(2) { animation-delay: 0.3s; color: var(--mango-maduro); }
+.leaf-icon:nth-child(3) { animation-delay: 0.6s; color: var(--papaya); }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+}
+
+.tagline {
+    font-size: 1rem;
+    font-weight: 500;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    display: inline-block;
+    padding: 8px 24px;
+    border-radius: 50px;
+    border: 1px solid rgba(224, 122, 95, 0.4);
+}
+
+.tagline .highlight {
+    color: var(--papaya);
+    font-weight: 700;
+}
+
+.comic-boom {
+    display: none;
+}
+
+/* ========== NAVEGACIÓN ========== */
+.comic-nav {
+    background: rgba(11, 28, 21, 0.98);
+    backdrop-filter: blur(12px);
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(224, 122, 95, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+.nav-btn {
+    font-weight: 600;
+    font-size: 0.8rem;
+    background: transparent;
+    color: var(--text-light);
+    padding: 6px 18px;
+    border-radius: 40px;
+    text-decoration: none;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid rgba(224, 122, 95, 0.4);
+}
+
+.nav-btn:hover {
+    background: linear-gradient(135deg, var(--emerald-green), var(--terracotta));
+    border-color: var(--papaya);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 10px var(--glow-terracotta);
+}
+
+.nav-btn.club-btn {
+    background: linear-gradient(135deg, var(--terracotta), var(--papaya));
+    border: none;
+    color: var(--dark-bg);
+    font-weight: 700;
+}
+
+.nav-btn.club-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 12px var(--glow-terracotta);
+    filter: brightness(1.05);
+}
+
+/* ========== SECCIONES GENERALES ========== */
+.category-section {
+    margin: 48px 0;
+}
+
+.section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--terracotta);
+}
+
+.category-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--mango-maduro), var(--papaya));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.category-title i {
+    margin-right: 10px;
+    font-size: 1.3rem;
+    background: linear-gradient(135deg, var(--mango-maduro), var(--papaya));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.subtitle-comic {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--papaya);
+    background: rgba(244, 172, 183, 0.15);
+    padding: 3px 12px;
+    border-radius: 30px;
+    margin-left: 10px;
+}
+
+.comic-badge {
+    background: linear-gradient(135deg, var(--terracotta), var(--papaya));
+    color: var(--dark-bg);
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 3px 12px;
+    border-radius: 30px;
+}
+
+/* ========== GRID DE PRODUCTOS ========== */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+}
+
+.product-card {
+    background: rgba(35, 68, 47, 0.85);
+    backdrop-filter: blur(8px);
+    border-radius: var(--border-radius-card);
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--text-light);
+    transition: var(--transition);
+    border: 1px solid rgba(224, 122, 95, 0.3);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    display: block;
+    cursor: pointer;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--papaya);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 12px var(--glow-papaya);
+}
+
+.card-image {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+    border-bottom: 2px solid var(--terracotta);
+}
+
+.card-content {
+    padding: 14px 16px;
+}
+
+.card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--mango-maduro);
+    margin-bottom: 6px;
+}
+
+.card-description {
+    font-size: 0.75rem;
+    color: var(--text-warm);
+    margin-bottom: 12px;
+    line-height: 1.4;
+    opacity: 0.9;
+}
+
+.card-store {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: rgba(224, 122, 95, 0.15);
+    color: var(--papaya);
+    padding: 4px 12px;
+    border-radius: 30px;
+    transition: var(--transition);
+    border: 1px solid rgba(224, 122, 95, 0.3);
+}
+
+.product-card:hover .card-store {
+    background: linear-gradient(135deg, var(--terracotta), var(--papaya));
+    color: var(--dark-bg);
+    border-color: var(--mango-maduro);
+}
+
+/* ========== CLUBES SECTION ========== */
+.clubes-section {
+    background: rgba(29, 62, 47, 0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 28px;
+    padding: 32px 28px;
+    margin: 48px 0;
+    border: 1px solid rgba(224, 122, 95, 0.3);
+}
+
+.clubes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+}
+
+.club-card {
+    background: rgba(29, 62, 47, 0.95);
+    backdrop-filter: blur(4px);
+    border-radius: 24px;
+    padding: 20px 20px;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text-light);
+    border: 1px solid rgba(224, 122, 95, 0.3);
+    transition: var(--transition);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    display: block;
+}
+
+.club-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--papaya);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.club-icon {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+}
+
+.club-name {
+    font-size: 1.4rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--mango-maduro), var(--papaya));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 8px;
+}
+
+.club-description {
+    font-size: 0.75rem;
+    margin: 10px 0;
+    line-height: 1.5;
+    color: var(--text-warm);
+    opacity: 0.9;
+}
+
+.club-tag {
+    display: inline-block;
+    background: rgba(224, 122, 95, 0.2);
+    padding: 3px 12px;
+    border-radius: 30px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--papaya);
+}
+
+.club-btn-action {
+    display: inline-block;
+    margin-top: 14px;
+    background: linear-gradient(135deg, var(--terracotta), var(--papaya));
+    color: var(--dark-bg);
+    padding: 6px 20px;
+    border-radius: 40px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    transition: var(--transition);
+}
+
+.club-card:hover .club-btn-action {
+    background: linear-gradient(135deg, var(--papaya), var(--mango-maduro));
+    transform: scale(1.02);
+    box-shadow: 0 2px 10px var(--glow-papaya);
+}
+
+/* CURURU destacado */
+.club-card:first-child {
+    border-left: 3px solid var(--papaya);
+    background: linear-gradient(135deg, rgba(30, 58, 42, 0.95), rgba(29, 62, 47, 0.9));
+}
+
+/* ========== FOOTER ========== */
+.main-footer {
+    background: linear-gradient(135deg, #0a1f18, #0f241b);
+    margin-top: 64px;
+    padding: 40px 0 28px;
+    border-top: 2px solid var(--terracotta);
+}
+
+.partners-banner {
+    text-align: center;
+}
+
+.partners-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.partners-header i {
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, var(--mango-maduro), var(--papaya));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.partners-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--mango-maduro), var(--papaya));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.partners-subtitle {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-bottom: 28px;
+    color: var(--text-warm);
+}
+
+.partners-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    margin-bottom: 32px;
+    padding: 16px 28px;
+    background: rgba(224, 122, 95, 0.08);
+    border-radius: 60px;
+}
+
+.partner-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: var(--transition);
+    opacity: 0.8;
+}
+
+.partner-item:hover {
+    opacity: 1;
+    transform: translateY(-3px);
+}
+
+.partner-logo {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    background: linear-gradient(135deg, #fff, #fef3e2);
+    border-radius: 50%;
+    padding: 10px;
+}
+
+.partner-name {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--papaya);
+}
+
+.footer-legal {
+    font-size: 0.65rem;
+    text-align: center;
+    border-top: 1px solid rgba(224, 122, 95, 0.3);
+    padding-top: 24px;
+    margin-top: 24px;
+    opacity: 0.6;
+}
+
+/* ========== SECCIÓN FUTURISTA ========== */
+.section-header-modern {
+    text-align: center;
+    margin-bottom: 48px;
+    position: relative;
+}
+
+.header-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, var(--glow-primary) 0%, transparent 70%);
+    opacity: 0.3;
+    filter: blur(40px);
+    pointer-events: none;
+}
+
+.section-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    background: rgba(224, 122, 95, 0.2);
+    border: 1px solid rgba(224, 122, 95, 0.4);
+    border-radius: 40px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--papaya);
+    margin-bottom: 16px;
+    backdrop-filter: blur(4px);
+}
+
+.section-title-futuristic {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.title-gradient {
+    background: linear-gradient(135deg, var(--mango-maduro), var(--papaya));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.title-highlight {
+    background: linear-gradient(135deg, var(--papaya), var(--terracotta));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-left: 8px;
+}
+
+.section-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-warm);
+    opacity: 0.8;
+}
+
+/* ========== BENEFICIOS FUTURISTAS ========== */
+.benefits-futuristic {
+    margin: 64px 0;
+    padding: 20px 0;
+}
+
+.benefits-grid-futuristic {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 28px;
+    margin-bottom: 48px;
+}
+
+.benefit-card-futuristic {
+    position: relative;
+    background: rgba(29, 62, 47, 0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 28px;
+    padding: 28px 24px;
+    border: 1px solid var(--glass-border);
+    transition: var(--transition-smooth);
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.benefit-card-futuristic:hover {
+    transform: translateY(-8px);
+    border-color: var(--terracotta);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px var(--glow-primary);
+}
+
+.card-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 30% 20%, var(--glow-primary), transparent 70%);
+    opacity: 0;
+    transition: var(--transition-smooth);
+    pointer-events: none;
+}
+
+.benefit-card-futuristic:hover .card-glow {
+    opacity: 0.15;
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--terracotta), var(--papaya));
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.card-icon i {
+    font-size: 1.8rem;
+    color: var(--dark-bg);
+}
+
+.benefit-card-futuristic h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--mango-maduro);
+}
+
+.benefit-card-futuristic h3 span {
+    color: var(--papaya);
+}
+
+.benefit-card-futuristic p {
+    font-size: 0.85rem;
+    color: var(--text-warm);
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.card-stats {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(224, 122, 95, 0.2);
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--mango-maduro), var(--papaya));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.stat-label {
+    font-size: 0.7rem;
+    color: var(--text-warm);
+    text-transform: uppercase;
+}
+
+/* CTA Futurista */
+.register-cta-futuristic {
+    text-align: center;
+    position: relative;
+    padding: 32px;
+    background: rgba(29, 62, 47, 0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 60px;
+    border: 1px solid var(--glass-border);
+}
+
+.cta-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 100%;
+    background: radial-gradient(ellipse, var(--glow-primary), transparent);
+    opacity: 0.1;
+    filter: blur(60px);
+    pointer-events: none;
+}
+
+.register-btn-futuristic {
+    background: linear-gradient(135deg, var(--terracotta), var(--papaya));
+    border: none;
+    padding: 16px 40px;
+    border-radius: 60px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--dark-bg);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.register-btn-futuristic:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 32px var(--glow-primary);
+}
+
+.btn-icon {
+    transition: transform 0.3s ease;
+}
+
+.register-btn-futuristic:hover .btn-icon {
+    transform: translateX(4px);
+}
+
+.cta-benefits {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+}
+
+.cta-benefits span {
+    font-size: 0.75rem;
+    color: var(--text-warm);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cta-benefits i {
+    color: var(--papaya);
+    font-size: 0.7rem;
+}
+
+/* ========== FORO FUTURISTA ========== */
+.forum-futuristic {
+    margin: 64px 0;
+    background: rgba(18, 44, 30, 0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 48px;
+    padding: 48px 40px;
+    border: 1px solid var(--glass-border);
+}
+
+.forum-stats {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--mango-maduro), var(--papaya));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: block;
+}
+
+.stat-item .stat-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Mensajes */
+.forum-message-futuristic {
+    background: rgba(29, 62, 47, 0.85);
+    backdrop-filter: blur(4px);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 16px;
+    border-left: 3px solid var(--terracotta);
+    transition: var(--transition-smooth);
+}
+
+.forum-message-futuristic {
+    background: linear-gradient(135deg, rgba(29, 62, 47, 0.6), rgba(18, 44, 30, 0.7));
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 16px;
+    border-left: 3px solid var(--terracotta);
+    transition: var(--transition-smooth);
+}
+
+.forum-message-futuristic:hover {
+    transform: translateX(4px);
+    border-left-color: var(--papaya);
+}
+
+.message-header-futuristic {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.message-author-futuristic {
+    font-weight: 700;
+    color: var(--mango-maduro);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.message-badge {
+    font-size: 0.6rem;
+    background: rgba(224, 122, 95, 0.3);
+    padding: 2px 10px;
+    border-radius: 30px;
+    color: var(--papaya);
+}
+
+.message-date-futuristic {
+    font-size: 0.65rem;
+    color: var(--text-warm);
+    opacity: 0.6;
+}
+
+.message-content-futuristic {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    line-height: 1.5;
+}
+
+/* Formulario Futurista */
+.forum-form-futuristic {
+    background: rgba(18, 44, 30, 0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 28px;
+    padding: 28px;
+    margin-bottom: 28px;
+    border: 1px solid var(--glass-border);
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.form-header i {
+    font-size: 1.5rem;
+    color: var(--papaya);
+}
+
+.form-header h3 {
+    font-size: 1.1rem;
+    color: var(--mango-maduro);
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.forum-input-futuristic,
+.forum-textarea-futuristic {
+    width: 100%;
+    padding: 14px 18px;
+    background: rgba(11, 28, 21, 0.8);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    transition: var(--transition-smooth);
+}
+
+.forum-input-futuristic:focus,
+.forum-textarea-futuristic:focus {
+    outline: none;
+    border-color: var(--terracotta);
+    box-shadow: 0 0 0 3px var(--glow-primary);
+}
+
+.input-focus-glow,
+.textarea-focus-glow {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--terracotta), var(--papaya));
+    transition: width 0.3s ease;
+}
+
+.forum-input-futuristic:focus ~ .input-focus-glow,
+.forum-textarea-futuristic:focus ~ .textarea-focus-glow {
+    width: 100%;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.forum-submit-futuristic {
+    background: linear-gradient(135deg, var(--terracotta), var(--papaya));
+    border: none;
+    padding: 12px 28px;
+    border-radius: 40px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--dark-bg);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.forum-submit-futuristic:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px var(--glow-primary);
+}
+
+.form-note {
+    font-size: 0.65rem;
+    color: var(--text-warm);
+    opacity: 0.6;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Miembros Activos */
+.active-members-futuristic {
+    background: rgba(18, 44, 30, 0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+    padding: 20px 24px;
+    border: 1px solid var(--glass-border);
+}
+
+.members-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.members-header i {
+    color: var(--papaya);
+    font-size: 1rem;
+}
+
+.members-header span {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--text-warm);
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    background: #4caf50;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+.members-avatars {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--terracotta), var(--papaya));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    position: relative;
+}
+
+.avatar:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px var(--glow-primary);
+}
+
+.avatar[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--dark-bg);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.65rem;
+    white-space: nowrap;
+    z-index: 10;
+    border: 1px solid var(--terracotta);
+}
+
+.avatar-more {
+    width: 40px;
+    height: 40px;
+    background: rgba(224, 122, 95, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--papaya);
+}
+
+/* Loading */
+.forum-loading-futuristic {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 40px;
+    color: var(--text-warm);
+}
+
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--glass-border);
+    border-top-color: var(--terracotta);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Empty state */
+.empty-forum-futuristic {
+    text-align: center;
+    padding: 48px;
+    color: var(--text-warm);
+    opacity: 0.7;
+}
+
+.empty-forum-futuristic i {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+/* ========== ANIMACIONES GENERALES ========== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.category-section, .product-card, .club-card {
+    animation: fadeInUp 0.4s ease forwards;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .site-title {
+        font-size: 2.8rem;
+    }
+    
+    .tagline {
+        font-size: 0.85rem;
+    }
+    
+    .category-title {
+        font-size: 1.3rem;
+    }
+    
+    .nav-btn {
+        padding: 5px 14px;
+        font-size: 0.7rem;
+    }
+    
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 18px;
+    }
+    
+    .card-image {
+        height: 150px;
+    }
+    
+    .card-content {
+        padding: 12px;
+    }
+    
+    .card-title {
+        font-size: 0.9rem;
+    }
+    
+    .club-name {
+        font-size: 1.2rem;
+    }
+    
+    .clubes-section {
+        padding: 24px 20px;
+    }
+    
+    .partner-logo {
+        width: 45px;
+        height: 45px;
+    }
+    
+    /* Futurista responsive */
+    .section-title-futuristic {
+        font-size: 1.8rem;
+    }
+    
+    .benefits-futuristic,
+    .forum-futuristic {
+        padding: 20px;
+    }
+    
+    .forum-futuristic {
+        padding: 28px 20px;
+    }
+    
+    .benefits-grid-futuristic {
+        grid-template-columns: 1fr;
+    }
+    
+    .forum-stats {
+        gap: 24px;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .forum-submit-futuristic {
+        justify-content: center;
+    }
+    
+    .cta-benefits {
+        gap: 12px;
+    }
+}
