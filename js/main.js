@@ -159,7 +159,7 @@ function createClubCard(club) {
     const card = document.createElement('a');
     card.className = 'club-card';
     card.href = club.url;
-    if (club.url === "index.html") {
+    if (club.url === "clubes/cururu/index.html") {
         card.target = '_self';
     } else {
         card.target = '_blank';
@@ -210,7 +210,6 @@ function loadPartners() {
 }
 
 // ========== FORO FUTURISTA ==========
-
 let forumMessages = [];
 
 function loadForumMessagesFuturistic() {
@@ -362,7 +361,6 @@ function showNotificationFuturistic(message, type = 'success') {
         <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
         <span>${message}</span>
     `;
-    // CORREGIDO: usar colores que existen en las variables
     notification.style.cssText = `
         position: fixed;
         bottom: 24px;
@@ -387,21 +385,12 @@ function showNotificationFuturistic(message, type = 'success') {
     }, 3000);
 }
 
-function showRegistrationModalFuturistic() {
-    showNotificationFuturistic('🔐 Sistema de registro en desarrollo. Próximamente más beneficios.', 'info');
-}
-
 function initForumFuturistic() {
     loadForumMessagesFuturistic();
     
     const postBtn = document.getElementById('postMessageBtnFuturistic');
     if (postBtn) {
         postBtn.addEventListener('click', postNewMessageFuturistic);
-    }
-    
-    const registerBtn = document.getElementById('registerBtnFuturistic');
-    if (registerBtn) {
-        registerBtn.addEventListener('click', showRegistrationModalFuturistic);
     }
 }
 
@@ -424,7 +413,184 @@ function initSmoothScroll() {
     });
 }
 
-// ========== INICIALIZACIÓN ==========
+// ========== AUTENTICACIÓN CON SUPABASE ==========
+let supabaseClient = null;
+let currentUser = null;
+
+// Configuración de Supabase
+const SUPABASE_URL = 'https://nmvzcjeqqpwndffzahjg.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5tdnpjamVxcXB3bmRmZnphaGpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyODk2ODgsImV4cCI6MjA5MDg2NTY4OH0.Ban1Hfa0ul7Jpj7DWai54D4zeNXrRpjg9gcsYCYC5eU';
+
+// Inicializar UNA SOLA instancia
+function initSupabaseAuth() {
+    if (typeof window.supabase !== 'undefined' && !supabaseClient) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        checkUserSession();
+    } else if (!window.supabase) {
+        setTimeout(initSupabaseAuth, 500);
+    }
+}
+
+async function checkUserSession() {
+    if (!supabaseClient) return;
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    currentUser = user;
+    updateAuthButtonUI();
+}
+
+function updateAuthButtonUI() {
+    const btn = document.getElementById('authFloatBtn');
+    if (!btn) return;
+    
+    if (currentUser) {
+        btn.innerHTML = `<i class="fas fa-user-check"></i> ${currentUser.email.split('@')[0]}`;
+        btn.classList.add('logged-in');
+    } else {
+        btn.innerHTML = `<i class="fas fa-user"></i> Mi Cuenta`;
+        btn.classList.remove('logged-in');
+    }
+}
+
+async function handleLogin(email, password) {
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    window.location.reload();
+}
+
+async function handleRegister(email, password, nombre) {
+    const { error } = await supabaseClient.auth.signUp({ 
+        email, 
+        password,
+        options: { data: { nombre } }
+    });
+    if (error) throw error;
+    
+    if (supabaseClient) {
+        await supabaseClient.from('perfiles').insert({
+            email: email,
+            nombre: nombre,
+            rol: 'socio',
+            activo: false
+        });
+    }
+    
+    alert('Registro exitoso! Tu cuenta será activada por un administrador.');
+}
+
+async function handleLogout() {
+    await supabaseClient.auth.signOut();
+    window.location.reload();
+}
+
+function showAuthModal() {
+    const modal = document.getElementById('authModal');
+    if (modal) modal.style.display = 'flex';
+}
+
+function hideAuthModal() {
+    const modal = document.getElementById('authModal');
+    if (modal) modal.style.display = 'none';
+}
+
+// Funciones globales para los botones del modal
+window.doLogin = async function() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    try {
+        await handleLogin(email, password);
+        hideAuthModal();
+    } catch (error) {
+        alert('Error: ' + error.message);
+    }
+};
+
+window.doRegister = async function() {
+    const nombre = document.getElementById('regNombre').value;
+    const email = document.getElementById('regEmail').value;
+    const password = document.getElementById('regPassword').value;
+    
+    if (!nombre || !email || !password) {
+        alert('Completá todos los campos');
+        return;
+    }
+    if (password.length < 6) {
+        alert('La contraseña debe tener al menos 6 caracteres');
+        return;
+    }
+    try {
+        await handleRegister(email, password, nombre);
+        hideAuthModal();
+    } catch (error) {
+        alert('Error: ' + error.message);
+    }
+};
+
+window.hideAuthModal = hideAuthModal;
+
+function addAuthElements() {
+    // Botón flotante
+    if (!document.getElementById('authFloatBtn')) {
+        const btn = document.createElement('button');
+        btn.id = 'authFloatBtn';
+        btn.className = 'auth-float-btn';
+        btn.innerHTML = '<i class="fas fa-user"></i> Mi Cuenta';
+        btn.onclick = showAuthModal;
+        document.body.appendChild(btn);
+    }
+    
+    // Modal de autenticación
+    if (!document.getElementById('authModal')) {
+        const modalHTML = `
+            <div id="authModal" class="auth-modal" style="display: none;">
+                <div class="auth-modal-content">
+                    <span class="auth-close" onclick="hideAuthModal()">&times;</span>
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" data-tab="login">Iniciar Sesión</button>
+                        <button class="auth-tab" data-tab="register">Registrarse</button>
+                    </div>
+                    <div id="loginForm" class="auth-form active">
+                        <input type="email" id="loginEmail" placeholder="Email">
+                        <input type="password" id="loginPassword" placeholder="Contraseña">
+                        <button onclick="doLogin()">Ingresar</button>
+                    </div>
+                    <div id="registerForm" class="auth-form">
+                        <input type="text" id="regNombre" placeholder="Nombre">
+                        <input type="email" id="regEmail" placeholder="Email">
+                        <input type="password" id="regPassword" placeholder="Contraseña">
+                        <button onclick="doRegister()">Registrarse</button>
+                        <p class="auth-note">Al registrarte, tu cuenta será revisada por un administrador.</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        // Tabs del modal
+        document.querySelectorAll('.auth-tab').forEach(tab => {
+            tab.onclick = () => {
+                document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById('loginForm').classList.toggle('active', tab.dataset.tab === 'login');
+                document.getElementById('registerForm').classList.toggle('active', tab.dataset.tab === 'register');
+            };
+        });
+    }
+    
+    // Botón de logout si está logueado
+    if (currentUser && !document.getElementById('logoutBtn')) {
+        const logoutBtn = document.createElement('button');
+        logoutBtn.id = 'logoutBtn';
+        logoutBtn.className = 'logout-float-btn';
+        logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Salir';
+        logoutBtn.onclick = handleLogout;
+        document.body.appendChild(logoutBtn);
+    } else if (!currentUser) {
+        const existingLogout = document.getElementById('logoutBtn');
+        if (existingLogout) existingLogout.remove();
+    }
+}
+
+// ========== INICIALIZACIÓN PRINCIPAL ==========
 document.addEventListener('DOMContentLoaded', () => {
     loadProducts();
     loadClubs();
@@ -432,9 +598,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initSmoothScroll();
     initForumFuturistic();
     
-    // Animación de entrada para secciones
     const sections = document.querySelectorAll('.category-section');
     sections.forEach((section, idx) => {
         section.style.animationDelay = `${idx * 0.1}s`;
     });
-});m
+    
+    // Inicializar autenticación
+    addAuthElements();
+    initSupabaseAuth();
+});
