@@ -188,7 +188,53 @@
             padding: 20px;
             border: 2px solid #7ca35a;
         }
+        .modal-galeria { position: relative; margin-bottom: 20px; }
         .modal-imagen { width: 100%; max-height: 400px; object-fit: cover; border-radius: 16px; margin-bottom: 20px; }
+        .modal-galeria .modal-imagen { margin-bottom: 0; }
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 42px;
+            height: 42px;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(8, 15, 6, 0.78);
+            color: #e0ecd0;
+            font-size: 1.15rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .modal-nav:hover { background: rgba(124, 163, 90, 0.95); color: #0f190c; }
+        .modal-nav.prev { left: 12px; }
+        .modal-nav.next { right: 12px; }
+        .modal-nav.hidden { display: none; }
+        .modal-thumbs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+        .modal-thumb {
+            width: 58px;
+            height: 58px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid rgba(124, 163, 90, 0.3);
+            cursor: pointer;
+            opacity: 0.72;
+            transition: opacity 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+        }
+        .modal-thumb:hover,
+        .modal-thumb.active {
+            opacity: 1;
+            border-color: #7ca35a;
+            transform: translateY(-2px);
+        }
         .modal-titulo { font-family: 'Poppins', sans-serif; font-size: 1.5rem; color: #e0ecd0; }
         .modal-thc { display: inline-block; background: #7ca35a; color: #0f190c; padding: 5px 15px; border-radius: 20px; margin-top: 10px; }
         .cerrar-modal { position: absolute; top: 15px; right: 20px; color: #c8d8b5; font-size: 35px; cursor: pointer; }
@@ -315,6 +361,22 @@
         .mensaje-fecha { font-size: 0.7rem; color: #7ca35a; margin-bottom: 5px; }
         .mensaje-destino { font-size: 0.75rem; color: #8fb86a; margin-bottom: 5px; }
         .mensaje-texto { color: #e0ecd0; }
+        .info-proyecto-panel {
+            margin-top: 24px;
+            padding: 18px;
+            border: 1px solid rgba(124, 163, 90, 0.28);
+            border-radius: 18px;
+            background: rgba(8, 15, 6, 0.55);
+        }
+        .info-proyecto-pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: #dbe7cf;
+            font-family: Consolas, 'Courier New', monospace;
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
         
         .nav-admin-bar, .nav-maestro-bar {
             background: rgba(20, 30, 18, 0.6);
@@ -392,6 +454,8 @@
             .calendario-grid { grid-template-columns: 1fr; }
             .form-grid { grid-template-columns: 1fr; }
             .header { flex-direction: column; text-align: center; }
+            .modal-nav { width: 36px; height: 36px; font-size: 1rem; }
+            .modal-thumb { width: 48px; height: 48px; }
         }
     </style>
 </head>
@@ -594,7 +658,12 @@
 <div id="productoModal" class="modal">
     <div class="modal-content">
         <span class="cerrar-modal">&times;</span>
-        <img id="modalImagen" class="modal-imagen" src="" alt="">
+        <div class="modal-galeria">
+            <button type="button" id="modalPrev" class="modal-nav prev hidden" aria-label="Imagen anterior">&#10094;</button>
+            <img id="modalImagen" class="modal-imagen" src="" alt="">
+            <button type="button" id="modalNext" class="modal-nav next hidden" aria-label="Imagen siguiente">&#10095;</button>
+        </div>
+        <div id="modalThumbs" class="modal-thumbs"></div>
         <h2 id="modalTitulo" class="modal-titulo"></h2>
         <div id="modalCepa" class="modal-cepa"></div>
         <p id="modalDescripcion" class="modal-descripcion"></p>
@@ -614,7 +683,7 @@
                 <div class="form-group"><label>THC %</label><input type="number" step="0.1" id="editThc"></div>
                 <div class="form-group"><label>CBD %</label><input type="number" step="0.1" id="editCbd"></div>
                 <div class="form-group full-width"><label>Descripción</label><textarea id="editDescripcion" rows="3"></textarea></div>
-                <div class="form-group full-width"><label>URL Imagen</label><input type="text" id="editImagenUrl" placeholder="https://ejemplo.com/imagen.jpg"></div>
+                <div class="form-group full-width"><label>URL Imagen</label><input type="text" id="editImagenUrl" placeholder="https://ejemplo.com/imagen.jpg, https://ejemplo.com/imagen-2.jpg"></div>
             </div>
             <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
                 <button type="button" class="btn-submit" onclick="cerrarEditProducto()">Cancelar</button>
@@ -1098,6 +1167,75 @@ async function cargarGraficosDashboard() {
     document.querySelector('.cerrar-modal')?.addEventListener('click', () => document.getElementById('productoModal').style.display = 'none');
     window.onclick = function(e) { if (e.target == document.getElementById('productoModal')) document.getElementById('productoModal').style.display = 'none'; };
     
+    let modalImagenes = [];
+    let modalImagenIndex = 0;
+
+    function obtenerImagenesProducto(producto) {
+        const urls = String(producto.imagen_url || '')
+            .split(/[\n,]+/)
+            .map(url => url.trim())
+            .filter(Boolean);
+        if (urls.length) return urls;
+
+        switch ((producto.nombre || '').toLowerCase()) {
+            case 'cururÃº dream':
+            case 'cururu dream':
+                return ['assets/images/cururu-dream.jpg'];
+            case 'sapo kush':
+                return ['assets/images/sapo-kush.jpg'];
+            case 'rana verde':
+            case 'rana kush':
+                return ['assets/images/rana-verde.jpg'];
+            default:
+                return ['assets/images/cururu-dream.jpg'];
+        }
+    }
+
+    function renderModalGaleria() {
+        const imagenEl = document.getElementById('modalImagen');
+        const thumbsEl = document.getElementById('modalThumbs');
+        const prevEl = document.getElementById('modalPrev');
+        const nextEl = document.getElementById('modalNext');
+        if (!imagenEl || !thumbsEl || !prevEl || !nextEl || !modalImagenes.length) return;
+
+        imagenEl.src = modalImagenes[modalImagenIndex];
+        imagenEl.alt = `Imagen ${modalImagenIndex + 1} de ${modalImagenes.length}`;
+        prevEl.classList.toggle('hidden', modalImagenes.length <= 1);
+        nextEl.classList.toggle('hidden', modalImagenes.length <= 1);
+
+        thumbsEl.innerHTML = modalImagenes.length > 1
+            ? modalImagenes.map((url, index) => `<img src="${url}" class="modal-thumb ${index === modalImagenIndex ? 'active' : ''}" data-index="${index}" alt="Vista ${index + 1}">`).join('')
+            : '';
+
+        thumbsEl.querySelectorAll('.modal-thumb').forEach((thumb) => {
+            thumb.addEventListener('click', () => {
+                modalImagenIndex = parseInt(thumb.dataset.index, 10) || 0;
+                renderModalGaleria();
+            });
+        });
+    }
+
+    function cambiarImagenModal(direccion) {
+        if (modalImagenes.length <= 1) return;
+        modalImagenIndex = (modalImagenIndex + direccion + modalImagenes.length) % modalImagenes.length;
+        renderModalGaleria();
+    }
+
+    abrirModal = function(producto) {
+        modalImagenes = obtenerImagenesProducto(producto);
+        modalImagenIndex = 0;
+        renderModalGaleria();
+        document.getElementById('modalTitulo').textContent = producto.nombre;
+        document.getElementById('modalCepa').textContent = producto.cepa || 'Cepa especial';
+        document.getElementById('modalDescripcion').textContent = producto.descripcion || 'Sin descripciÃ³n';
+        document.getElementById('modalThc').textContent = `THC: ${producto.thc_porcentaje || '?'}% | CBD: ${producto.cbd_porcentaje || '?'}%`;
+        document.getElementById('productoModal').style.display = 'flex';
+    };
+    
+    document.querySelector('#productoModal .cerrar-modal')?.addEventListener('click', () => document.getElementById('productoModal').style.display = 'none');
+    document.getElementById('modalPrev')?.addEventListener('click', () => cambiarImagenModal(-1));
+    document.getElementById('modalNext')?.addEventListener('click', () => cambiarImagenModal(1));
+    
     // ==================== RESERVAS SOCIO ====================
     async function cargarReservasSocio() {
         if (!socioData) return;
@@ -1248,7 +1386,7 @@ async function cargarGraficosDashboard() {
         const productos = await obtenerProductos();
         if (!productos || productos.length === 0) { container.innerHTML = '<div class="loading">No hay productos</div>'; return; }
         container.innerHTML = `
-            <form id="formProductoAdmin"><h3>🌱 Nuevo Producto</h3><div class="form-grid"><div class="form-group full-width"><input type="text" id="productoNombreAdmin" placeholder="Nombre" required></div><div class="form-group"><input type="text" id="productoCepaAdmin" placeholder="Cepa"></div><div class="form-group"><input type="number" step="0.1" id="productoThcAdmin" placeholder="THC %"></div><div class="form-group"><input type="number" step="0.1" id="productoCbdAdmin" placeholder="CBD %"></div><div class="form-group full-width"><textarea id="productoDescripcionAdmin" rows="3" placeholder="Descripción"></textarea></div><div class="form-group full-width"><input type="text" id="productoImagenAdmin" placeholder="URL de la imagen (opcional)"></div></div><button type="submit" class="btn-submit">Agregar</button></form><hr><div id="productosAdminLista"><table class="tabla-datos"><thead><th>Nombre</th><th>Cepa</th><th>THC</th><th>CBD</th><th>Imagen</th><th>Acciones</th></thead><tbody>${productos.map(prod => `<tr>
+            <form id="formProductoAdmin"><h3>🌱 Nuevo Producto</h3><div class="form-grid"><div class="form-group full-width"><input type="text" id="productoNombreAdmin" placeholder="Nombre" required></div><div class="form-group"><input type="text" id="productoCepaAdmin" placeholder="Cepa"></div><div class="form-group"><input type="number" step="0.1" id="productoThcAdmin" placeholder="THC %"></div><div class="form-group"><input type="number" step="0.1" id="productoCbdAdmin" placeholder="CBD %"></div><div class="form-group full-width"><textarea id="productoDescripcionAdmin" rows="3" placeholder="Descripción"></textarea></div><div class="form-group full-width"><input type="text" id="productoImagenAdmin" placeholder="Una o varias URLs, separadas por coma"></div></div><button type="submit" class="btn-submit">Agregar</button></form><hr><div id="productosAdminLista"><table class="tabla-datos"><thead><th>Nombre</th><th>Cepa</th><th>THC</th><th>CBD</th><th>Imagen</th><th>Acciones</th></thead><tbody>${productos.map(prod => `<tr>
                 <td>${escapeHtml(prod.nombre)}</td>
                 <td>${escapeHtml(prod.cepa || '-')}</td>
                 <td>${prod.thc_porcentaje || '-'}%</td>
@@ -1495,7 +1633,7 @@ async function cargarGraficosDashboard() {
     async function cargarMaestroProductos() {
         const container = document.getElementById('maestro-productos');
         const p = await obtenerProductos();
-        container.innerHTML = `<h3 style="color:#e0ecd0;">🌿 Gestión de Productos</h3><form id="formProductoMaestro"><div class="form-grid"><div class="form-group full-width"><input type="text" id="prodNombreMaestro" placeholder="Nombre" required></div><div class="form-group"><input type="text" id="prodCepaMaestro" placeholder="Cepa"></div><div class="form-group"><input type="number" step="0.1" id="prodThcMaestro" placeholder="THC %"></div><div class="form-group"><input type="number" step="0.1" id="prodCbdMaestro" placeholder="CBD %"></div><div class="form-group full-width"><textarea id="prodDescMaestro" rows="3" placeholder="Descripción"></textarea></div><div class="form-group full-width"><input type="text" id="prodImagenMaestro" placeholder="URL de la imagen (opcional)"></div></div><button type="submit" class="btn-submit">Agregar Producto</button></form><hr><div id="productosMaestroLista"><table class="tabla-datos"><thead><th>Nombre</th><th>Cepa</th><th>THC</th><th>CBD</th><th>Imagen</th><th>Acciones</th></thead><tbody>${p.map(prod => `<tr>
+        container.innerHTML = `<h3 style="color:#e0ecd0;">🌿 Gestión de Productos</h3><form id="formProductoMaestro"><div class="form-grid"><div class="form-group full-width"><input type="text" id="prodNombreMaestro" placeholder="Nombre" required></div><div class="form-group"><input type="text" id="prodCepaMaestro" placeholder="Cepa"></div><div class="form-group"><input type="number" step="0.1" id="prodThcMaestro" placeholder="THC %"></div><div class="form-group"><input type="number" step="0.1" id="prodCbdMaestro" placeholder="CBD %"></div><div class="form-group full-width"><textarea id="prodDescMaestro" rows="3" placeholder="Descripción"></textarea></div><div class="form-group full-width"><input type="text" id="prodImagenMaestro" placeholder="Una o varias URLs, separadas por coma"></div></div><button type="submit" class="btn-submit">Agregar Producto</button></form><hr><div id="productosMaestroLista"><table class="tabla-datos"><thead><th>Nombre</th><th>Cepa</th><th>THC</th><th>CBD</th><th>Imagen</th><th>Acciones</th></thead><tbody>${p.map(prod => `<tr>
                 <td>${escapeHtml(prod.nombre)}</td>
                 <td>${escapeHtml(prod.cepa || '-')}</td>
                 <td>${prod.thc_porcentaje || '-'}%</td>
@@ -1628,6 +1766,26 @@ async function cargarGraficosDashboard() {
         await cargarConfiguracion();
         container.innerHTML = `<h3 style="color:#e0ecd0;">⚙️ Configuración del Sistema</h3><div class="form-grid"><div class="form-group"><label>Horas límite para primer jueves (h)</label><input type="number" id="confHorasPrimer" value="${configSistema.horasLimitePrimer}"></div><div class="form-group"><label>Horas límite para último jueves (h)</label><input type="number" id="confHorasUltimo" value="${configSistema.horasLimiteUltimo}"></div><div class="form-group full-width"><button class="btn-submit" onclick="guardarConfigMaestro()">Guardar Configuración</button></div></div>`;
     }
+    const cargarMaestroConfigBase = cargarMaestroConfig;
+    cargarMaestroConfig = async function() {
+        await cargarMaestroConfigBase();
+        const container = document.getElementById('maestro-config');
+        if (!container) return;
+
+        let datosProyecto = 'No se pudo cargar datos-importantes.txt';
+        try {
+            const response = await fetch('datos-importantes.txt', { cache: 'no-store' });
+            if (response.ok) datosProyecto = await response.text();
+        } catch (error) {
+            console.error('Error cargando datos importantes:', error);
+        }
+
+        container.insertAdjacentHTML(
+            'beforeend',
+            `<div class="info-proyecto-panel"><h3 style="color:#e0ecd0; margin-bottom: 12px;">Datos importantes del proyecto</h3><pre class="info-proyecto-pre">${escapeHtml(datosProyecto)}</pre></div>`
+        );
+    };
+
     window.guardarConfigMaestro = async () => {
         const horasPrimer = document.getElementById('confHorasPrimer').value;
         const horasUltimo = document.getElementById('confHorasUltimo').value;

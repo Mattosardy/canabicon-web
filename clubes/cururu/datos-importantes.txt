@@ -1,0 +1,21 @@
+PROYECTO: Cururu Club
+DOMINIO: https://cururu-club-web.matiast3.workers.dev/
+LOGIN: https://cururu-club-web.matiast3.workers.dev/
+
+ACCESOS DE PRUEBA
+Usuario admin:
+Contrasena admin:
+
+Usuario maestro:
+Contrasena maestro:
+
+Usuario socio:
+Contrasena socio:
+
+DATOS OPERATIVOS
+Supabase URL: https://qjiqbcokhlwisxbeplym.supabase.co
+Storage buckets: sorteos, productos, noticias
+
+NOTAS
+- Completar manualmente los usuarios y contrasenas reales de prueba.
+- Actualizar este archivo cada vez que cambien accesos, dominio o servicios.
