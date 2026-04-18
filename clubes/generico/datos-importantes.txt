@@ -1,0 +1,36 @@
+PROYECTO: GEENERICO
+DOMINIO: https://generico-web.matiast3.workers.dev/
+LOGIN: https://generico-web.matiast3.workers.dev/
+
+ACCESOS DE PRUEBA
+Usuario socio:
+Email: socio@generico.com
+Telefono: 099123456
+Contrasena: Socio123!
+Rol: socio
+
+Usuario admin:
+Email: admin@generico.com
+Telefono: 099543210
+Contrasena: Admin123!
+Rol: admin
+
+Usuario maestro:
+Email: matiast3@gmail.com
+Telefono: 091950107
+Contrasena: 441983
+Rol: maestro
+
+VERIFICACION
+Fecha: 2026-04-18
+- Login por email y contrasena verificado en Supabase.
+- Tabla socios verificada con estado activo para las tres cuentas.
+- Roles verificados: socio, admin y maestro.
+- El frontend toma el rol desde la tabla socios luego del login.
+
+DATOS OPERATIVOS
+Supabase URL: https://xdgiensgdpedeenwgxyn.supabase.co
+
+NOTAS
+- Archivo creado para dejar registro operativo de accesos de prueba de GEENERICO.
+- Si cambian usuarios, contrasenas o roles, actualizar este archivo.
