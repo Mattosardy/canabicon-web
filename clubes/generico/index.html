@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#6f3118">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <base href="https://generico-web.matiast3.workers.dev/">
@@ -998,7 +999,7 @@
     <div class="header">
         <div class="header-left">
             <div class="logo">
-                <h1><img src="assets/images/logo.png" alt="Logo GEENERICO" class="logo-mark" onerror="this.style.display='none'"> GEENERICO</h1>
+                <h1><img src="assets/images/logo.png" alt="Logo GEENERICO" class="logo-mark" crossorigin="anonymous" onerror="this.style.display='none'"> GEENERICO</h1>
                 <p>Club cannábico privado · Selección curada · Experiencia cuidada</p>
             </div>
             <div class="header-nav" id="navContainer">
@@ -1332,6 +1333,30 @@
 
 <script src="js/config.js"></script>
 <script src="js/utils.js"></script>
+<script>
+if (typeof window.aplicarTemaDesdeLogo === 'function') {
+    const aplicarTemaDesdeLogoOriginal = window.aplicarTemaDesdeLogo;
+    window.aplicarTemaDesdeLogo = function aplicarTemaDesdeLogoSafe() {
+        const logo = document.querySelector('.logo-mark');
+        if (!logo) return;
+
+        let logoOrigin = '';
+        try {
+            logoOrigin = new URL(logo.currentSrc || logo.src, window.location.href).origin;
+        } catch (error) {
+            aplicarTemaDesdeLogoOriginal();
+            return;
+        }
+
+        if (logoOrigin && logoOrigin !== window.location.origin) {
+            console.info('Tema dinámico desde logo omitido en entorno local con assets cross-origin.');
+            return;
+        }
+
+        aplicarTemaDesdeLogoOriginal();
+    };
+}
+</script>
 <script src="js/auth.js"></script>
 <script src="js/public.js"></script>
 <script src="js/socio.js"></script>
